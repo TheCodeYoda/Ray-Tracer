@@ -23,7 +23,8 @@ class sphere {
     this->radius = radius;
   }
 
-  bool hit(const ray &r)
+  /* returns time at which ray hits the sphere else returns -1.0 */
+  double hit(const ray &r)
   {
     auto direction = r.direction;
     auto origin = r.origin;
@@ -37,7 +38,11 @@ class sphere {
     auto c = oc.dot(oc) - (radius * radius);
 
     auto discriminant = (b * b) - (4 * a * c);
-    return (discriminant > 0);
+    if (discriminant > 0) {
+      /* returns a single root */
+      return (-b + sqrt(discriminant)) / (2 * a);
+    }
+    return -1.0;
   }
 };
 

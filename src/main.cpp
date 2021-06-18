@@ -18,24 +18,30 @@ color ray_color(const ray &r)
 {
   /* if intersects return red */
   auto sp = sphere({0, 0, -1}, 0.5);
-
-  if (sp.hit(r)) {
-    return color(1, 0, 0);
+  auto time = sp.hit(r);
+  if (time > -1.0) {
+    /* r.at(t) ---> point of intersection */
+    /* normal ----> surface normal vector */
+    auto normal = r.at(time) - sp.center;
+    /* shading */
+    return 0.5 * color(normal.x + 1, normal.y + 1, normal.z + 1);
   }
-  /* no intersection return black */
-  return color(0, 0, 0);
+  /* no intersection return blue-white gradient background */
+  vec3 unit_direction = unit_vector(r.direction);
+  auto t = 0.5 * (unit_direction.y + 1.0);
+  return (1.0 - t) * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0);
 }
 
 /* generates ppm file */
 int main()
 {
 
-  // Image
+  /* Image */
   const auto aspect_ratio = 16.0 / 9.0;
   const int image_width = 400;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
 
-  // Camera
+  /* Camera */
 
   auto viewport_height = 2.0;
   auto viewport_width = aspect_ratio * viewport_height;
@@ -46,7 +52,7 @@ int main()
   auto vertical = vec3(0, viewport_height, 0);
   auto lower_left_corner = origin - horizontal / 2 - vertical / 2 - vec3(0, 0, focal_length);
 
-  // Render
+  /* Render */
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 

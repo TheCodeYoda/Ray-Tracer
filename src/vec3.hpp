@@ -60,12 +60,12 @@ class vec3 {
   }
 
   /* length functions */
-  double length_square()
+  double length_square() const
   {
     return (this->x * this->x) + (this->y) * (this->y) + (this->z * this->z);
   }
 
-  double length()
+  double length() const
   {
     return sqrt(this->length_square());
   }
@@ -78,12 +78,6 @@ class vec3 {
   vec3 cross(const vec3 &rhs)
   {
     return vec3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
-  }
-
-  vec3 unit_vector()
-  {
-    double mag = this->length();
-    return vec3(this->x / mag, this->y / mag, this->z / mag);
   }
 };
 
@@ -117,6 +111,11 @@ vec3 operator*(const vec3 &lhs, const double rhs)
 vec3 operator/(const vec3 &lhs, const double rhs)
 {
   return lhs * (1 / rhs);
+}
+
+vec3 unit_vector(const vec3 &v)
+{
+  return v / v.length();
 }
 
 /* aliasing */

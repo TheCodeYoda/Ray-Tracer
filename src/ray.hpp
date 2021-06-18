@@ -24,7 +24,7 @@ class ray {
   }
 
   /* given t value tells which coordinate ray is at from the ray eqn*/
-  point3 at(double t)
+  point3 at(double t) const
   {
     return this->origin + t * this->direction;
   }
