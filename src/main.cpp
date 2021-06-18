@@ -1,6 +1,7 @@
 #include "color.hpp"
 #include "vec3.hpp"
 #include "ray.hpp"
+#include "sphere.hpp"
 
 #include <iostream>
 
@@ -9,32 +10,16 @@
 /*   C --> (Cx,Cy,Cz) */
 /* P(t) = origin + direction*t */
 /* substitute P(t) in sphere equation and find discriminant to find roots of eqn wich tells about
- * intersection */
-
-/* utility function to check imtersection of ray with sphere */
-bool hit_sphere(const point3 &center, double radius, const ray &r)
-{
-  auto direction = r.direction;
-  auto origin = r.origin;
-  auto oc = origin - center;
-
-  /* quadratic eqn ax^2 + bx + c = 0 */
-  /* discrimant = b^2 - 4ac */
-
-  auto a = direction.dot(direction);
-  auto b = 2 * (direction.dot(oc));
-  auto c = oc.dot(oc) - (radius * radius);
-
-  auto discriminant = (b * b) - (4 * a * c);
-  return (discriminant > 0);
-}
+   intersection */
 
 /* after intersection if the ray hits sphere it returns color of sphere otherwise it returns
  * background color */
 color ray_color(const ray &r)
 {
   /* if intersects return red */
-  if (hit_sphere({0, 0, -1}, 0.5, r)) {
+  auto sp = sphere({0, 0, -1}, 0.5);
+
+  if (sp.hit(r)) {
     return color(1, 0, 0);
   }
   /* no intersection return black */
