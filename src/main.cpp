@@ -2,8 +2,12 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "sphere.hpp"
+#include "hittable.hpp"
 
 #include <iostream>
+#include <limits>
+
+const double infinity = std::numeric_limits<double>::infinity();
 
 /* Sphere equation centered at point P(x,y,z) : (P-C)(P-C) = r^2 */
 /*   P --> (x,y,z) */
@@ -17,14 +21,12 @@
 color ray_color(const ray &r)
 {
   /* if intersects return red */
+  hit_record rec;
   auto sp = sphere({0, 0, -1}, 0.5);
-  auto time = sp.hit(r);
-  if (time > -1.0) {
-    /* r.at(t) ---> point of intersection */
-    /* normal ----> surface normal vector */
-    auto normal = r.at(time) - sp.center;
+  if (sp.hit(r, 0, infinity, rec)) {
+    /* rec stores all hit info such as normal and stuff */
     /* shading */
-    return 0.5 * color(normal.x + 1, normal.y + 1, normal.z + 1);
+    return 0.5 * (rec.normal + color(1, 1, 1));
   }
   /* no intersection return blue-white gradient background */
   vec3 unit_direction = unit_vector(r.direction);
