@@ -11,6 +11,7 @@ struct hit_record {
 
 /* abstract class */
 class hittable {
+ public:
   virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) = 0;
 };
 

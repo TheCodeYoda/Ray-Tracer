@@ -1,13 +1,10 @@
 #include "color.hpp"
-#include "vec3.hpp"
-#include "ray.hpp"
 #include "sphere.hpp"
 #include "hittable.hpp"
+#include "hittable_list.hpp"
+#include "constants.hpp"
 
 #include <iostream>
-#include <limits>
-
-const double infinity = std::numeric_limits<double>::infinity();
 
 /* Sphere equation centered at point P(x,y,z) : (P-C)(P-C) = r^2 */
 /*   P --> (x,y,z) */
@@ -18,12 +15,11 @@ const double infinity = std::numeric_limits<double>::infinity();
 
 /* after intersection if the ray hits sphere it returns color of sphere otherwise it returns
  * background color */
-color ray_color(const ray &r)
+color ray_color(const ray &r, hittable_list &scene)
 {
   /* if intersects return red */
   hit_record rec;
-  auto sp = sphere({0, 0, -1}, 0.5);
-  if (sp.hit(r, 0, infinity, rec)) {
+  if (scene.hit(r, 0, infinity, rec)) {
     /* rec stores all hit info such as normal and stuff */
     /* shading */
     return 0.5 * (rec.normal + color(1, 1, 1));
@@ -42,6 +38,12 @@ int main()
   const auto aspect_ratio = 16.0 / 9.0;
   const int image_width = 400;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+  /* Scene */
+
+  hittable_list scene;
+  scene.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+  scene.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
   /* Camera */
 
@@ -64,7 +66,7 @@ int main()
       auto u = double(i) / (image_width - 1);
       auto v = double(j) / (image_height - 1);
       ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
-      color pixel_color = ray_color(r);
+      color pixel_color = ray_color(r, scene);
       write_color(std::cout, pixel_color);
     }
   }
