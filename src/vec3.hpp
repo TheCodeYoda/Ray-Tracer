@@ -28,12 +28,9 @@ class vec3 {
   }
 
   /* operator functions -,+=,*=,/= */
-  vec3 &operator-()
+  vec3 operator-() const
   {
-    this->x = -this->x;
-    this->y = -this->y;
-    this->z = -this->z;
-    return (*this);
+    return vec3(-this->x, -this->y, -this->z);
   }
 
   vec3 &operator+=(const vec3 &rhs)
@@ -70,7 +67,7 @@ class vec3 {
     return sqrt(this->length_square());
   }
 
-  double dot(const vec3 &rhs)
+  double dot(const vec3 &rhs) const
   {
     return this->x * rhs.x + this->y * rhs.y + this->z * rhs.z;
   }

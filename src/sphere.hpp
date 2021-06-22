@@ -48,7 +48,8 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec)
       rec.t = root;
       /* point of intersection on sphere */
       rec.p = r.at(root);
-      rec.normal = (rec.p - this->center) / radius;
+      auto outward_normal = (rec.p - this->center) / radius;
+      rec.set_face(r, outward_normal);
       return true;
     }
   }
