@@ -2,7 +2,6 @@
 #define HITTABLE_LIST_H
 
 #include "hittable.hpp"
-
 #include <vector>
 #include <memory>
 

@@ -4,6 +4,8 @@
 #include <cmath>
 #include <iostream>
 
+#include "constants.hpp"
+
 using std::sqrt;
 
 class vec3 {
@@ -76,6 +78,17 @@ class vec3 {
   {
     return vec3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
   }
+
+  /* random vector gen functions */
+  static vec3 random()
+  {
+    return vec3(random_double(), random_double(), random_double());
+  }
+
+  static vec3 random(double min, double max)
+  {
+    return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+  }
 };
 
 /* friend operator functions and vec3 interface */
@@ -113,6 +126,27 @@ vec3 operator/(const vec3 &lhs, const double rhs)
 vec3 unit_vector(const vec3 &v)
 {
   return v / v.length();
+}
+
+/* gives a random point inside unit sphere */
+
+vec3 random_in_unit_sphere()
+{
+  while (1) {
+    auto point = vec3::random(-1, 1);
+    if (point.length_square() >= 1)
+      continue;
+    return point;
+  }
+}
+
+vec3 random_in_hemisphere(const vec3 &normal)
+{
+  vec3 in_unit_sphere = random_in_unit_sphere();
+  if (in_unit_sphere.dot(normal) > 0.0) /* In the same hemisphere as the normal */
+    return in_unit_sphere;
+  else
+    return -in_unit_sphere;
 }
 
 /* aliasing */
