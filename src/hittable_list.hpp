@@ -32,10 +32,10 @@ class hittable_list : public hittable {
     this->objects.clear();
   }
 
-  virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec);
+  virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const override;
 };
 
-bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &rec)
+bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
 {
   auto closest = t_max;
   auto flag = false;

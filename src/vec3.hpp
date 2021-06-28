@@ -79,6 +79,13 @@ class vec3 {
     return vec3(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
   }
 
+  bool near_zero() const
+  {
+    /* Return true if the vector is close to zero in all dimensions. */
+    const auto s = 1e-8;
+    return (fabs(this->x) < s) && (fabs(this->y) < s) && (fabs(this->z) < s);
+  }
+
   /* random vector gen functions */
   static vec3 random()
   {
@@ -147,6 +154,16 @@ vec3 random_in_hemisphere(const vec3 &normal)
     return in_unit_sphere;
   else
     return -in_unit_sphere;
+}
+
+vec3 random_unit_vector()
+{
+  return unit_vector(random_in_unit_sphere());
+}
+
+vec3 reflect(const vec3 &v, const vec3 &normal)
+{
+  return v - 2 * v.dot(normal) * normal;
 }
 
 /* aliasing */

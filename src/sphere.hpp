@@ -4,11 +4,13 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 #include "hittable.hpp"
+#include "material.hpp"
 
 class sphere : public hittable {
  public:
   point3 center;
   double radius;
+  shared_ptr<material> mat_ptr;
 
  public:
   /* ctors */
@@ -18,42 +20,42 @@ class sphere : public hittable {
     this->radius = 1.0;
   }
 
-  sphere(point3 center, double radius)
+  sphere(point3 center, double radius, shared_ptr<material> mptr)
   {
     this->center = center;
     this->radius = radius;
+    this->mat_ptr = mptr;
   }
 
-  virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec);
+  virtual bool hit(const ray &r, double t_min, double t_max, hit_record &rec) const override;
 };
 
-bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec)
+bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
 {
-  auto direction = r.direction;
-  auto origin = r.origin;
-  auto oc = origin - center;
+  vec3 oc = r.origin - center;
+  auto a = r.direction.length_square();
+  auto half_b = oc.dot(r.direction);
+  auto c = oc.length_square() - radius * radius;
 
-  /* quadratic eqn ax^2 + bx + c = 0 */
-  /* discrimant = b^2 - 4ac */
+  auto discriminant = half_b * half_b - a * c;
+  if (discriminant < 0)
+    return false;
+  auto sqrtd = sqrt(discriminant);
 
-  auto a = direction.dot(direction);
-  auto b = 2 * (direction.dot(oc));
-  auto c = oc.dot(oc) - (radius * radius);
-
-  auto discriminant = (b * b) - (4 * a * c);
-  if (discriminant > 0) {
-    /* returns a single root */
-    auto root = (-b + sqrt(discriminant)) / (2 * a);
-    if (root >= t_min && root <= t_max) {
-      rec.t = root;
-      /* point of intersection on sphere */
-      rec.p = r.at(root);
-      auto outward_normal = (rec.p - this->center) / radius;
-      rec.set_face_normal(r, outward_normal);
-      return true;
-    }
+  // Find the nearest root that lies in the acceptable range.
+  auto root = (-half_b - sqrtd) / a;
+  if (root < t_min || t_max < root) {
+    root = (-half_b + sqrtd) / a;
+    if (root < t_min || t_max < root)
+      return false;
   }
-  return false;
+
+  rec.t = root;
+  rec.p = r.at(root);
+  vec3 outward_normal = (rec.p - center) / radius;
+  rec.set_face_normal(r, outward_normal);
+  rec.mat_ptr = mat_ptr;
+  return true;
 }
 
 #endif

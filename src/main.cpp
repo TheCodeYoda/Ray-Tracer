@@ -6,6 +6,7 @@
 #include "camera.hpp"
 #include "vec3.hpp"
 #include "ray.hpp"
+#include "material.hpp"
 
 #include <iostream>
 
@@ -30,11 +31,12 @@ color ray_color(const ray &r, hittable_list &scene, int depth)
 
   if (scene.hit(r, 0.001, infinity, rec)) {
     /* rec stores all hit info such as normal and stuff */
-    /* shading */
-    /* target is random point in unit sphere */
-    /* point3 target = rec.p + random_in_hemisphere(rec.normal); */
-    point3 target = rec.p + rec.normal + random_in_unit_sphere();
-    return 0.5 * ray_color(ray(rec.p, target - rec.p), scene, depth - 1);
+    ray scattered;
+    color attenuation;
+    if (rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
+      return attenuation * ray_color(scattered, scene, depth - 1);
+    }
+    return color(0, 0, 0);
   }
   /* no intersection return blue-white gradient background */
   vec3 unit_direction = unit_vector(r.direction);
@@ -51,12 +53,19 @@ int main()
   const int image_width = 400;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
   const int samples_per_pixel = 100;
-  int max_depth = 50; /* recursion depth after reflections(random) for diffuse materials*/
+  int max_depth = 10; /* recursion depth after reflections(random) for diffuse materials*/
   /* Scene */
 
   hittable_list scene;
-  scene.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
-  scene.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+  auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+  auto material_center = make_shared<lambertian>(color(0.7, 0.3, 0.3));
+  auto material_left = make_shared<metal>(color(0.8, 0.8, 0.8));
+  auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2));
+
+  scene.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+  scene.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+  scene.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+  scene.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
   /* Camera */
   camera cam;
