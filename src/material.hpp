@@ -2,6 +2,8 @@
 #define MATERIAL_H
 
 #include "constants.hpp"
+#include "ray.hpp"
+#include "vec3.hpp"
 
 struct hit_record;
 
@@ -50,11 +52,13 @@ class lambertian : public material {
 class metal : public material {
  public:
   color albedo;
+  double fuzz; /* reflection has a small random factor as spheres get larger*/
 
  public:
-  metal(const color &c)
+  metal(const color &c, double fuzz)
   {
     this->albedo = c;
+    this->fuzz = fuzz;
   }
   virtual bool scatter(const ray &ray_in,
                        const hit_record &rec,
@@ -62,7 +66,7 @@ class metal : public material {
                        ray &scattered) const override
   {
     vec3 reflected = reflect(unit_vector(ray_in.direction), rec.normal);
-    scattered = ray(rec.p, reflected);
+    scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere());
     attenuation = albedo;
     return (scattered.direction.dot(rec.normal) > 0);
     return true;
