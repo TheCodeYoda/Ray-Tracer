@@ -94,12 +94,24 @@ class dielectric : public material {
     double cos_theta = fmin(ray_in_unit_direction.dot(rec.normal), 1.0);
     double sin_theta = sqrt(1 - (cos_theta * cos_theta));
     auto scattered_direction = refract(ray_in_unit_direction, rec.normal, refraction_ratio);
-    if (sin_theta * refraction_ratio > 1.0) {
+    bool cannot_refract = sin_theta * refraction_ratio > 1.0;
+    /* rays reflect not only when it passes critical angle but also in other situations as
+     * specified by schilk's approximation */
+    if (cannot_refract || reflectance(cos_theta, refraction_ratio)) {
       /* Total internal Reflection */
       scattered_direction = reflect(ray_in_unit_direction, rec.normal);
     }
     scattered = ray(rec.p, scattered_direction);
     return true;
+  }
+
+ private:
+  static double reflectance(double cosine, double ref_idx)
+  {
+    /* Use Schlick's approximation for reflectance. */
+    auto r0 = (1 - ref_idx) / (1 + ref_idx);
+    r0 = r0 * r0;
+    return r0 + (1 - r0) * pow((1 - cosine), 5);
   }
 };
 
