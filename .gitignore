@@ -1,1 +1,4 @@
 *~
+.clangd/
+.dir-locals.el
+compile_commands.json

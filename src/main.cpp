@@ -21,7 +21,7 @@
  * background color */
 
 /* make it recursive and set depth also to avoid stack smashing */
-color ray_color(const ray &r, hittable_list &scene, int depth)
+color ray_color(const ray &r, hittable_list &scene, int depth) /* */
 {
   hit_record rec;
   /* max depth reached no light */
@@ -69,7 +69,6 @@ int main()
 
   /* Camera */
   camera cam;
-
   /* Render */
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
@@ -88,6 +87,5 @@ int main()
       write_color(std::cout, pixel_color, samples_per_pixel);
     }
   }
-
   std::cerr << "\nDone.\n";
 }
