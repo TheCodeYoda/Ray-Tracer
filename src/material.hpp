@@ -4,6 +4,7 @@
 #include "constants.hpp"
 #include "ray.hpp"
 #include "vec3.hpp"
+#include "hittable.hpp"
 
 struct hit_record;
 
@@ -69,6 +70,35 @@ class metal : public material {
     scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere());
     attenuation = albedo;
     return (scattered.direction.dot(rec.normal) > 0);
+    return true;
+  }
+};
+
+class dielectric : public material {
+ public:
+  double index_of_refraction;
+
+ public:
+  dielectric(double ir)
+  {
+    this->index_of_refraction = ir;
+  }
+  virtual bool scatter(const ray &ray_in,
+                       const hit_record &rec,
+                       color &attenuation,
+                       ray &scattered) const override
+  {
+    attenuation = color(1, 1, 1);
+    double refraction_ratio = rec.front_face ? 1.0 / index_of_refraction : index_of_refraction;
+    vec3 ray_in_unit_direction = unit_vector(ray_in.direction);
+    double cos_theta = fmin(ray_in_unit_direction.dot(rec.normal), 1.0);
+    double sin_theta = sqrt(1 - (cos_theta * cos_theta));
+    auto scattered_direction = refract(ray_in_unit_direction, rec.normal, refraction_ratio);
+    if (sin_theta * refraction_ratio > 1.0) {
+      /* Total internal Reflection */
+      scattered_direction = reflect(ray_in_unit_direction, rec.normal);
+    }
+    scattered = ray(rec.p, scattered_direction);
     return true;
   }
 };
