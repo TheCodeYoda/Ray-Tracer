@@ -49,7 +49,7 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &rec)
       /* point of intersection on sphere */
       rec.p = r.at(root);
       auto outward_normal = (rec.p - this->center) / radius;
-      rec.set_face(r, outward_normal);
+      rec.set_face_normal(r, outward_normal);
       return true;
     }
   }

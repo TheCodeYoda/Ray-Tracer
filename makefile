@@ -5,4 +5,4 @@ main.o: src/vec3.hpp src/color.hpp src/ray.hpp src/sphere.hpp src/main.cpp src/h
 clean:
 	rm obj/*.o target/debug
 clean_all:
-	rm obj/*.o target/debug Images/image 
+	rm obj/*.o target/debug Images/* 

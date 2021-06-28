@@ -32,7 +32,8 @@ color ray_color(const ray &r, hittable_list &scene, int depth)
     /* rec stores all hit info such as normal and stuff */
     /* shading */
     /* target is random point in unit sphere */
-    point3 target = rec.p + random_in_hemisphere(rec.normal);
+    /* point3 target = rec.p + random_in_hemisphere(rec.normal); */
+    point3 target = rec.p + rec.normal + random_in_unit_sphere();
     return 0.5 * ray_color(ray(rec.p, target - rec.p), scene, depth - 1);
   }
   /* no intersection return blue-white gradient background */
