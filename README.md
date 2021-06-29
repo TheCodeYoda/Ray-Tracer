@@ -11,9 +11,8 @@ A simple ray tracer written in c++
 ./target/debug > Images/[image_name]
 
 ## Rendered Samples
-![Diffuse sphere](/Images/diffuse_sphere.ppm)
-Format: ![Alt Text](url)
-
+![alt text][diffuse]
+[diffuse]: Images/diffuse_sphere.ppm "Diffuse material with gamma correction"
 
 
 
