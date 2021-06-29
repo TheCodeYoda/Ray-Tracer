@@ -8,11 +8,11 @@ A simple ray tracer written in c++
 * make clean
 
 ### Ray tracing an image
-./target/debug > Images/[image_name]
+* ./target/debug > Images/[image_name]
 
 ## Rendered Samples
 ![alt text][diffuse]
-[diffuse]: Images/diffuse_sphere.ppm "Diffuse material with gamma correction"
+[diffuse]: Images/diffuse_sphere "Diffuse material with gamma correction"
 
 
 
