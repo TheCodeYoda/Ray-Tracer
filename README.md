@@ -12,7 +12,7 @@ A simple ray tracer written in c++
 
 ## Rendered Samples
 ![alt text][diffuse]
-[diffuse]: Images/diffuse_sphere "Diffuse material with gamma correction"
+[diffuse]: Images/diffuse_sphere.png "Diffuse material with gamma correction"
 
 
 
