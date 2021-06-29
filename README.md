@@ -11,7 +11,7 @@ A simple ray tracer written in c++
 ./target/debug > Images/[image_name]
 
 ## Rendered Samples
-![Diffuse sphere](/Images/diffuse_sphere)
+![Diffuse sphere](/Images/diffuse_sphere.ppm)
 Format: ![Alt Text](url)
 
 
