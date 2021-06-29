@@ -15,4 +15,10 @@ A simple ray tracer written in c++
 
 [render_01]: Images/diffuse_sphere.png "Diffuse material with gamma correction"
 
+![alt text][render_01]
 
+[render_01]: Images/ "Metal spheres"
+
+![alt text][render_01]
+
+[render_01]: Images/Final_render.png "Final Render"
