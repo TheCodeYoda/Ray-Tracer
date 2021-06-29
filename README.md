@@ -17,7 +17,7 @@ A simple ray tracer written in c++
 
 ![alt text][render_02]
 
-[render_02]: Images/metal_spherees.png "Metal spheres"
+[render_02]: Images/metal_spheres.png "Metal spheres"
 
 ![alt text][render_03]
 
