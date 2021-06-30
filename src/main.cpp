@@ -1,5 +1,6 @@
 #include "color.hpp"
 #include "sphere.hpp"
+#include "triangle.hpp"
 #include "hittable.hpp"
 #include "hittable_list.hpp"
 #include "constants.hpp"
@@ -48,6 +49,11 @@ color ray_color(const ray &r, hittable_list &scene, int depth) /* */
 
 hittable_list random_scene()
 {
+  /* hittable_list scene; */
+  /* auto mat = make_shared<lambertian>(color(0.4, 0.2, 0.1)); */
+  /* scene.add(make_shared<triangle>(point3(-2, 1, 0), point3(3, 2, 0), point3(1, 5, 0), mat)); */
+  /* return scene; */
+
   hittable_list scene;
 
   auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
@@ -105,7 +111,7 @@ int main()
   const int image_width = 1200;
   const int image_height = static_cast<int>(image_width / aspect_ratio);
   const int samples_per_pixel = 500;
-  const int max_depth = 50;
+  const int max_depth = 10;
 
   /* World */
 
@@ -119,7 +125,7 @@ int main()
   auto dist_to_focus = 10.0;
   auto aperture = 0.1;
 
-  camera cam(lookfrom, lookat, vup, 20, aspect_ratio, aperture, dist_to_focus);
+  camera cam(lookfrom, lookat, vup, 180, aspect_ratio, aperture, dist_to_focus);
 
   std::cout << "P3\n" << image_width << " " << image_height << "\n255\n";
 
